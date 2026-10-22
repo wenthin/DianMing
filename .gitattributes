@@ -1,0 +1,18 @@
+# 统一换行符：仓库内用 LF，检出到 Windows 时按需转换
+* text=auto eol=lf
+
+*.kt text
+*.kts text
+*.xml text
+*.md text
+*.pro text
+*.properties text
+*.py text
+*.csv text
+gradlew text eol=lf
+gradlew.bat text eol=crlf
+*.jar binary
+*.apk binary
+*.png binary
+*.jpg binary
+*.webp binary
