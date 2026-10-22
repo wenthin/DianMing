@@ -23,7 +23,9 @@ data class RollCallUiState(
     val classInfo: ClassInfo? = null,
     val students: List<Student> = emptyList(),
     val currentIndex: Int = 0,
-    val records: Map<String, AttendanceRecord> = emptyMap()
+    val records: Map<String, AttendanceRecord> = emptyMap(),
+    /** 是否还有可撤销的点名（决定卡片能否右滑回退） */
+    val canUndo: Boolean = false
 ) {
     val current: Student? get() = students.getOrNull(currentIndex)
     val finished: Boolean get() = currentIndex >= students.size
@@ -73,7 +75,8 @@ class RollCallViewModel(
                     classInfo = repo.getClass(classId),
                     students = students,
                     records = records,
-                    currentIndex = startIndex
+                    currentIndex = startIndex,
+                    canUndo = history.isNotEmpty()
                 )
             }
         }
@@ -93,7 +96,8 @@ class RollCallViewModel(
         _state.update {
             it.copy(
                 records = it.records + (student.id to record),
-                currentIndex = it.currentIndex + 1
+                currentIndex = it.currentIndex + 1,
+                canUndo = true
             )
         }
         viewModelScope.launch {
@@ -107,7 +111,8 @@ class RollCallViewModel(
         _state.update {
             it.copy(
                 records = it.records - last.first,
-                currentIndex = (it.currentIndex - 1).coerceAtLeast(0)
+                currentIndex = (it.currentIndex - 1).coerceAtLeast(0),
+                canUndo = history.isNotEmpty()
             )
         }
         viewModelScope.launch {
