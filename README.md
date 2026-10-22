@@ -1,6 +1,17 @@
 # 点个名（DianMing）
 
+[![构建](https://github.com/wenthin/DianMing/actions/workflows/android-release.yml/badge.svg)](https://github.com/wenthin/DianMing/actions/workflows/android-release.yml)
+[![最新版本](https://img.shields.io/github/v/release/wenthin/DianMing?label=%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC)](https://github.com/wenthin/DianMing/releases/latest)
+
 一款用 **Kotlin + Jetpack Compose** 编写的安卓点名应用：导入班级名单表格、快捷点名、统计并追溯出勤数据。
+
+## 直接下载
+
+| 版本 | 下载 | 说明 |
+| --- | --- | --- |
+| v1.0.0 | [app-release.apk](https://github.com/wenthin/DianMing/releases/download/v1.0.0/app-release.apk) | 正式签名版，约 11 MB，需 Android 8.0 及以上 |
+
+也可以在 [Releases 页面](https://github.com/wenthin/DianMing/releases) 查看历史版本与更新说明。
 
 ## 功能
 
@@ -42,6 +53,36 @@
 $env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'
 .\gradlew.bat :app:assembleDebug          # 产出 app\build\outputs\apk\debug\app-debug.apk
 .\gradlew.bat :app:testDebugUnitTest      # 运行单元测试
+.\gradlew.bat :app:assembleRelease        # 产出 app\build\outputs\apk\release\app-release.apk（需先配置签名，见下）
+```
+
+### 签名配置（本地）
+
+`app/build.gradle.kts` 会自动读取仓库根目录的 `keystore.properties`（已在 `.gitignore` 中排除，不会入库）：
+
+```properties
+storeFile=C:/Users/<用户名>/.android/dianming-release.jks
+storePassword=<密钥库口令>
+keyAlias=dianming
+keyPassword=<密钥口令>
+```
+
+没有这个文件时 `assembleRelease` 仍可编译，只是产出未签名的包。
+
+### 自动构建与发布（GitHub Actions）
+
+`.github/workflows/android-release.yml` 定义了流水线：
+
+- 推送到 `main`：自动跑单元测试 → 构建正式签名 APK → 作为构建产物（artifact）上传。
+- 推送 `v*` 标签（如 `v1.0.0`）：在上述流程之外，自动创建 [Release](https://github.com/wenthin/DianMing/releases) 并附上 APK。
+
+签名密钥库不放在仓库里，而是以 **Actions Secret** 的形式保存在仓库设置中：`KEYSTORE_BASE64`、`STORE_PASSWORD`、`KEY_ALIAS`、`KEY_PASSWORD`。流水线会在构建时把它还原成临时密钥文件，签完即弃。
+
+本地发一个新版本：
+
+```powershell
+git tag -a v1.1.0 -m "v1.1.0"
+git push origin v1.1.0
 ```
 
 ## 目录结构
