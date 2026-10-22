@@ -9,7 +9,7 @@
 
 | 版本 | 下载 | 说明 |
 | --- | --- | --- |
-| v1.0.0 | [app-release.apk](https://github.com/wenthin/DianMing/releases/download/v1.0.0/app-release.apk) | 正式签名版，约 11 MB，需 Android 8.0 及以上 |
+| v1.0.1 | [app-release.apk](https://github.com/wenthin/DianMing/releases/download/v1.0.1/app-release.apk) | 正式签名版，约 11 MB，需 Android 8.0 及以上 |
 
 也可以在 [Releases 页面](https://github.com/wenthin/DianMing/releases) 查看历史版本与更新说明。
 
